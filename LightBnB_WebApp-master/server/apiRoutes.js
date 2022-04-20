@@ -1,6 +1,8 @@
 module.exports = function(router, database) {
 
   router.get('/properties', (req, res) => {
+    // console.log("this is req.query -> " + Object.keys(req.query));
+    // console.log("this is req.query -> " + Object.values(req.query));
     database.getAllProperties(req.query)
     .then(properties => res.send({properties}))
     .catch(e => {

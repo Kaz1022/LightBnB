@@ -121,15 +121,18 @@ const getAllProperties = (options, limit = 10) => {
 
   if (options.city) {
     queryParams.push(`%${options.city}%`);
-    queryString += `WHERE LOWER(city) LIKE LOWER($${queryParams.length}) `;
+    queryString += `WHERE LOWER(city) LIKE LOWER($${queryParams.length})
+    `;
   }
 
   if (options.owner_id) {
     queryParams.push(`${options.owner_id}`);
     if (queryParams.length > 0) {
-      queryString += `AND owner_id = $${queryParams.length} `;
+      queryString += `AND owner_id = $${queryParams.length}
+      `;
     } else {
-      queryString += `WHERE owner_id = $${queryParams.length} `;
+      queryString += `WHERE owner_id = $${queryParams.length}
+      `;
     }
   }
 
@@ -137,32 +140,37 @@ const getAllProperties = (options, limit = 10) => {
   if (options.minimum_price_per_night) {
     queryParams.push(`${options.minimum_price_per_night * 100}`);
     if (queryParams.length > 0) {
-      queryString += `AND cost_per_night >= $${queryParams.length} `;
+      queryString += `AND cost_per_night >= $${queryParams.length} 
+      `;
     } else {
-      queryString += `WHERE cost_per_night >= $${queryParams.length} `;
+      queryString += `WHERE cost_per_night >= $${queryParams.length} 
+      `;
     }
   }
 
   if (options.maximum_price_per_night) {
     queryParams.push(`${options.maximum_price_per_night * 100}`);
     if (queryParams.length > 0) {
-      queryString += `AND cost_per_night <= $${queryParams.length} `;
+      queryString += `AND cost_per_night <= $${queryParams.length} 
+      `;
     } else {
-      queryString += `WHERE cost_per_night <= $${queryParams.length} `;
+      queryString += `WHERE cost_per_night <= $${queryParams.length} 
+      `;
     }
   }
 
-  queryString += `GROUP BY properties.id`;
+  queryString += `GROUP BY properties.id
+  `;
 
   if (options.minimum_rating) {
     queryParams.push(options.minimum_rating);
     queryString += `
-    HAVING AVG(property_reviews.rating) >= $${queryParams.length} `;
+    HAVING AVG(property_reviews.rating) >= $${queryParams.length} 
+    `;
   }
 
   queryParams.push(limit);
-  queryString += `
-   ORDER BY cost_per_night
+  queryString += `ORDER BY cost_per_night
    LIMIT $${queryParams.length};
    `;
 
@@ -187,9 +195,19 @@ exports.getAllProperties = getAllProperties;
  * @return {Promise<{}>} A promise to the property.
  */
 const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
+
+  const queryString = `INSERT INTO properties (owner_id, title, description, thumbnail_photo_url, cover_photo_url, cost_per_night, street, city, province, post_code, country, parking_spaces, number_of_bathrooms, number_of_bedrooms) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *;`
+
+  const values = [property.owner_id, property.title, property.description, property.thumbnail_photo_url, property.cover_photo_url, property.cost_per_night * 100, property.street, property.city, property.province, property.post_code, property.country, property.parking_spaces || 0, property.number_of_bathrooms || 0, property.number_of_bedrooms || 0];
+
+  return pool
+    .query(queryString, values)
+    .then((result) => {
+      console.log("Property Added!");
+      return result.rows;
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
 };
 exports.addProperty = addProperty;
