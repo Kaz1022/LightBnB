@@ -7,19 +7,19 @@ LightBnB is a web application similar to AirBnB. It's one of the LighhouseLab's 
 
 ### Sign Up
 
-!["Screenshot of Sing Up Page"]()
+!["Screenshot of Sing Up Page"](https://github.com/Kaz1022/LightBnB/blob/main/docs/signUp.png)
 
 ### Log In Page
 
-!["Screenshot of Log In Page"]()
+!["Screenshot of Log In Page"](https://github.com/Kaz1022/LightBnB/blob/main/docs/login.png)
 
 ### Search Listing
 
-!["Screenshot of Search"]()
+!["Screenshot of Search"](https://github.com/Kaz1022/LightBnB/blob/main/docs/SearchListing.png)
 
 ### My Reservations
 
-!["Screenshot of Search"]()
+!["Screenshot of Search"](https://github.com/Kaz1022/LightBnB/blob/main/docs/myReservations.png)
 
 
 ## Getting Started
